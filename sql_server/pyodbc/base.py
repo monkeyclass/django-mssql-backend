@@ -34,6 +34,7 @@ from .features import DatabaseFeatures # noqa
 from .introspection import DatabaseIntrospection # noqa
 from .operations import DatabaseOperations # noqa
 from .schema import DatabaseSchemaEditor # noqa
+from .aad_auth import AADAuth
 
 EDITION_AZURE_SQL_DB = 5
 
@@ -241,6 +242,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         user = conn_params.get('USER', None)
         password = conn_params.get('PASSWORD', None)
         port = conn_params.get('PORT', None)
+        aad_auth = conn_params.get('AAD-AUTH', None)
 
         options = conn_params.get('OPTIONS', {})
         driver = options.get('driver', 'ODBC Driver 13 for SQL Server')
@@ -276,7 +278,12 @@ class DatabaseWrapper(BaseDatabaseWrapper):
             else:
                 cstr_parts['SERVERNAME'] = host
 
-        if user:
+        attrs_before = {}
+        if aad_auth:
+            # For AAD auth using access token we need to set the `attrs_before`
+            # parameter with the retrieved access token struct.
+            attrs_before = AADAuth.create_attrs_before_with_access_token(aad_auth)
+        elif user:
             cstr_parts['UID'] = user
             cstr_parts['PWD'] = password
         else:
@@ -311,7 +318,8 @@ class DatabaseWrapper(BaseDatabaseWrapper):
             try:
                 conn = Database.connect(connstr,
                                         unicode_results=unicode_results,
-                                        timeout=timeout)
+                                        timeout=timeout,
+                                        attrs_before=attrs_before)
             except Exception as e:
                 for error_number in self._transient_error_numbers:
                     if error_number in e.args[1]:

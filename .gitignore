@@ -12,3 +12,6 @@ tests/local_settings.py
 # Virtual Env
 /venv/
 .idea/
+
+# VS Code
+.vscode/

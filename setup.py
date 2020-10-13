@@ -26,8 +26,9 @@ setup(
     packages=find_packages(),
     install_requires=[
         'pyodbc>=3.0',
+        'msal>=1.2.0'
     ],
     package_data={'sql_server.pyodbc': ['regex_clr.dll']},
     classifiers=CLASSIFIERS,
-    keywords='django',
+    keywords='AZURE django',
 )
