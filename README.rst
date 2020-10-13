@@ -6,12 +6,16 @@ django-mssql-backend
 
 *django-mssql-backend* is a fork of
 `django-pyodbc-azure <https://pypi.org/project/django-pyodbc-azure/>`__
+Support for AAD access has been adapted from
+`https://github.com/langholz/django-azure-sql-backend`__
+, which only support Django 2.1.
 
 Features
 --------
 
 -  Supports Django 2.2, 3.0
--  Supports Microsoft SQL Server 2008/2008R2, 2012, 2014, 2016, 2017, 2019
+-  Supports Microsoft SQL Server 2008/2008R2, 2012, 2014, 2016, 2017, 2019 and Azure SQL Database
+-  AAD authentication through registered application access token
 -  Passes most of the tests of the Django test suite
 -  Compatible with
    `Micosoft ODBC Driver for SQL Server <https://docs.microsoft.com/en-us/sql/connect/odbc/microsoft-odbc-driver-for-sql-server>`__,
@@ -74,7 +78,8 @@ in DATABASES control the behavior of the backend:
 
 -  USER
 
-   String. Database user name in ``"user"`` format.
+   String. Database user name in ``"user"`` (on-premise) or
+   ``"user@server"`` (Azure SQL Database) format.
    If not given then MS Integrated Security will be used.
 
 -  PASSWORD
@@ -111,6 +116,37 @@ for any given database-level settings dictionary:
    String. The alias of the database that this database should
    mirror during testing. Default value is ``None``.
    See the official Django documentation for more details.
+
+AAD-AUTH
+~~~~~~~~
+
+When provided, ``USER`` and ``PASSWORD`` are not used and AAD authentication using
+application access token is used instead.
+
+References:
+
+-  https://github.com/AzureAD/microsoft-authentication-library-for-python
+-  https://github.com/AzureAD/azure-activedirectory-library-for-python/wiki/Connect-to-Azure-SQL-Database
+-  https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-python-webapp
+-  https://docs.microsoft.com/en-us/sql/connect/python/pyodbc/step-3-proof-of-concept-connecting-to-sql-using-pyodbc?view=sql-server-ver15
+
+
+Dictionary. Current available keys are:
+
+-  tenant_id
+
+   String. Refers to the registered application tenant identifier to use.
+   It is also known as the directory identifier and can sometimes be provided
+   within the STS url like so: ``https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/token``
+
+-  client_id
+
+   String. Refers to the registered application client identifier to use.
+   It is also known as the application identifier.
+
+-  secret
+
+   String. Refers to the secret that will be use to authenticate with AAD.
 
 OPTIONS
 ~~~~~~~
@@ -228,6 +264,30 @@ Here is an example of the database settings:
     # set this to False if you want to turn off pyodbc's connection pooling
     DATABASE_CONNECTION_POOLING = False
 
+Here is an example of the database settings using AAD access token authentication:
+
+::
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'sql_server.pyodbc',
+            'NAME': 'mydb',
+            'HOST': 'myserver.database.windows.net',
+            'PORT': '',
+            'AAD-AUTH': {
+                'tenant_id': '02a2e49f-b581-45c4-84a9-bdee0198b26f',
+                'client_id': '818979f8-a731-48d9-bf42-b00a04e1e618',
+                'secret': "MY_SUPER_SECRET",
+            },
+            'OPTIONS': {
+                'driver': 'ODBC Driver 13 for SQL Server',
+            },
+        },
+    }
+    
+    # set this to False if you want to turn off pyodbc's connection pooling
+    DATABASE_CONNECTION_POOLING = False
+    
 Limitations
 -----------
 
