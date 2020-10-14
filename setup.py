@@ -15,13 +15,13 @@ CLASSIFIERS = [
 ]
 
 setup(
-    name='django-mssql-backend',
-    version='2.8.1',
-    description='Django backend for Microsoft SQL Server',
+    name='django-mssql-backend-azure',
+    version='2.9.0',
+    description='Django backend for Microsoft SQL Server and Azure',
     long_description=open('README.rst').read(),
-    author='ES Solutions AB',
-    author_email='info@essolutions.se',
-    url='https://github.com/ESSolutions/django-mssql-backend',
+    author='Monkeyclass',
+    author_email='',
+    url='https://github.com/monkeyclass/django-mssql-backend',
     license='BSD',
     packages=find_packages(),
     install_requires=[
