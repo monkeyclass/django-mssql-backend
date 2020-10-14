@@ -22,6 +22,7 @@ setup(
     author='Monkeyclass',
     author_email='',
     url='https://github.com/monkeyclass/django-mssql-backend',
+    download_url='https://github.com/monkeyclass/django-mssql-backend/archive/v_2.9.0.tar.gz'
     license='BSD',
     packages=find_packages(),
     install_requires=[
