@@ -7,7 +7,7 @@ django-mssql-backend
 *django-mssql-backend* is a fork of
 `django-pyodbc-azure <https://pypi.org/project/django-pyodbc-azure/>`__
 Support for AAD access has been adapted from
-`https://github.com/langholz/django-azure-sql-backend`__
+`django-azure-sql-backend <https://github.com/langholz/django-azure-sql-backend>`__
 , which only support Django 2.1.
 
 Features
