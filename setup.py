@@ -21,7 +21,7 @@ setup(
     long_description=open('README.rst').read(),
     author='Monkeyclass',
     author_email='',
-    url='https://github.com/monkeyclass/django-mssql-backend',
+    url='https://github.com/monkeyclass/django-mssql-backend-azure',
     download_url='https://github.com/monkeyclass/django-mssql-backend/archive/v_2.9.0.tar.gz'
     license='BSD',
     packages=find_packages(),
